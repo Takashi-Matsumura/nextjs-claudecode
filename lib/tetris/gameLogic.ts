@@ -123,19 +123,19 @@ export const useGameLogic = () => {
     // If we have a next piece, use it
     if (nextPiece) {
       setCurrentPiece(nextPiece.type);
-      setCurrentShape(nextPiece.shape);
+      setCurrentShape([...TETROMINOES[nextPiece.type]]); // 元のTETROMINOESから直接コピー
     } else {
       // First piece of the game
       const newPieceType = getRandomTetromino();
       setCurrentPiece(newPieceType);
-      setCurrentShape(TETROMINOES[newPieceType]);
+      setCurrentShape([...TETROMINOES[newPieceType]]);
     }
 
     // Generate next piece
     const newNextPieceType = getRandomTetromino();
     setNextPiece({
       type: newNextPieceType,
-      shape: TETROMINOES[newNextPieceType]
+      shape: [...TETROMINOES[newNextPieceType]] // 元のTETROMINOESから直接コピー
     });
 
     // Set initial position
@@ -224,23 +224,60 @@ export const useGameLogic = () => {
     }
   }, [currentPosition, currentShape, paused, gameOver, board]);
 
-  // Drop piece immediately
+  // Hard drop - ブロックを一番下まで落とす
   const dropPiece = useCallback((): void => {
     if (paused || gameOver) return;
     
     let newRow = currentPosition.row;
+    
+    // どこまで落下できるか計算
     while (isValidPosition(newRow + 1, currentPosition.col, currentShape)) {
       newRow++;
     }
     
+    // ブロックを固定する前に、動きのアニメーションが見えるように最終位置を設定
     setCurrentPosition({
       ...currentPosition,
       row: newRow
     });
     
-    // Lock the piece
-    placePiece();
+    // アニメーションのために少し遅延を入れてからブロックを固定する
+    setTimeout(() => {
+      // ハードドロップ専用の固定処理
+      const hardDropLockPiece = () => {
+        // 新しいボード状態を作成
+        const newBoard = [...board.map(row => [...row])];
+        
+        // 現在のブロックをボードに配置
+        for (let r = 0; r < currentShape.length; r++) {
+          for (let c = 0; c < currentShape[r].length; c++) {
+            if (currentShape[r][c] !== 0) {
+              const boardRow = newRow + r;
+              const boardCol = currentPosition.col + c;
+              
+              if (boardRow >= 0 && boardRow < ROWS && boardCol >= 0 && boardCol < COLS) {
+                newBoard[boardRow][boardCol] = currentShape[r][c];
+              }
+            }
+          }
+        }
+        
+        // ボード状態を更新
+        setBoard(newBoard);
+        
+        // 完成した行をチェック
+        checkLines(newBoard);
+        
+        // 次のブロックを用意
+        generateNewPiece();
+      };
+      
+      hardDropLockPiece();
+    }, 50); // 少し遅延を入れて視覚的にもブロックが落ちたことがわかるようにする
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPosition, currentShape, paused, gameOver, board]);
+  // checkLinesとgenerateNewPieceへの依存を避けるために依存配列から除外
 
   // Place piece on board
   const placePiece = useCallback(() => {

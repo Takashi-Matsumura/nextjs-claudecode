@@ -67,29 +67,35 @@ export default function TetrisGame() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
       <h1 className="text-4xl font-bold mb-8">Tetris</h1>
       
-      <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-        <GameState 
-          score={score} 
-          level={level} 
-          lines={lines} 
-          nextPiece={nextPiece}
-          isGameOver={isGameOver}
-          isPaused={isPaused}
-          onStart={startGame}
-          onReset={resetGame}
-          onPause={pauseGame}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start max-w-5xl w-full">
+        <div className="flex justify-center">
+          <GameState 
+            score={score} 
+            level={level} 
+            lines={lines} 
+            nextPiece={nextPiece}
+            isGameOver={isGameOver}
+            isPaused={isPaused}
+            onStart={startGame}
+            onReset={resetGame}
+            onPause={pauseGame}
+          />
+        </div>
         
-        <TetrisBoard board={board} />
+        <div className="flex justify-center">
+          <TetrisBoard board={board} />
+        </div>
         
-        <TetrisControls 
-          onMoveLeft={moveLeft} 
-          onMoveRight={moveRight} 
-          onRotate={rotate} 
-          onMoveDown={moveDown} 
-          onDrop={dropPiece}
-          disabled={isGameOver || isPaused}
-        />
+        <div className="flex justify-center">
+          <TetrisControls 
+            onMoveLeft={moveLeft} 
+            onMoveRight={moveRight} 
+            onRotate={rotate} 
+            onMoveDown={moveDown} 
+            onDrop={dropPiece}
+            disabled={isGameOver || isPaused}
+          />
+        </div>
       </div>
     </div>
   );

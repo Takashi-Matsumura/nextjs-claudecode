@@ -9,13 +9,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` - Run ESLint
 
 ## Code Style
-- **TypeScript**: Use strict mode with proper typing
+- **TypeScript**: Use strict mode with proper typing for all variables, parameters and return values
 - **Imports**: Order - React, Next.js, components, utilities, types, CSS
 - **Components**: Functional components with explicit return types
+- **State Management**: Use React hooks for state management (useState, useEffect, custom hooks)
 - **Naming**: PascalCase for components, camelCase for variables/functions
-- **CSS**: Use TailwindCSS for styling with className
-- **Fonts**: Use Geist Sans and Geist Mono via Next.js font system
-- **JSX**: Use self-closing tags when appropriate
-- **Props**: Define types using interfaces or type aliases
-- **Error Handling**: Use try/catch for async operations
+- **CSS**: Use TailwindCSS for styling with className attribute
+- **Responsiveness**: Implement responsive design using Tailwind breakpoints (sm, md, lg, etc.)
+- **JSX**: Use self-closing tags when appropriate, fragment syntax when needed
+- **Props**: Define types using interfaces with descriptive names
+- **Error Handling**: Use try/catch for async operations and proper error states
+- **Accessibility**: Include aria attributes and semantic HTML elements
 - **Formatting**: Double quotes for strings, semicolons at line endings
+- **File Structure**: Group related components in subdirectories
